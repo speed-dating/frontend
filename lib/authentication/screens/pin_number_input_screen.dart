@@ -1,8 +1,10 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:http/http.dart' as http;
 
 class PinCodeInputScreen extends StatefulWidget {
   final String phoneNumber;
@@ -15,6 +17,7 @@ class PinCodeInputScreen extends StatefulWidget {
 
 class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
   String pinNumber = "";
+
   bool _isButtonEnabled = false;
 
   @override
@@ -68,16 +71,42 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
                         });
                       }
                     },
-                    onSubmit: (String verificationCode) {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text("Verification Code"),
-                              content:
-                                  Text('Code entered is $verificationCode'),
-                            );
-                          });
+                    onSubmit: (String verificationCode) async {
+                      print(verificationCode);
+                      final url = Uri.parse(
+                          'http://localhost:8080/api/v1/auth/sms-verification/verify');
+                      final headers = {'Content-Type': 'application/json'};
+                      final body =
+                          '{"phoneNumber": "${widget.phoneNumber}", "verifyCode": "${verificationCode}"}';
+
+                      print(body);
+                      try {
+                        final response =
+                            await http.post(url, body: body, headers: headers);
+                        print(response.body);
+
+                        if (response.statusCode == HttpStatus.created) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("success"),
+                                  content: Text('정상적으로 수행되었습니다.'),
+                                );
+                              });
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("failure"),
+                                  content: Text('코드를 다시요청해주세요.'),
+                                );
+                              });
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
                     }, // end onSubmit
                   ),
                   SizedBox(height: 20),

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:speed_dating_front/authentication/screens/pin_number_input_screen.dart';
+import 'package:http/http.dart' as http;
 
 class PhoneNumberInputScreen extends StatefulWidget {
   const PhoneNumberInputScreen({super.key});
@@ -32,6 +35,30 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
       _isButtonEnabled =
           phoneNumber.startsWith("010") && (phoneNumber.length == 11);
     });
+  }
+
+  Future<void> _sendPhoneNumber() async {
+    final phoneNumber = _phoneController.text;
+
+    final url =
+        Uri.parse('http://localhost:8080/api/v1/auth/sms-verification/request');
+    final headers = {'Content-Type': 'application/json'};
+    final body = '{"phoneNumber": "$phoneNumber", "countryCode": "+82"}';
+
+    try {
+      final response = await http.post(url, body: body, headers: headers);
+
+      if (response.statusCode == HttpStatus.created) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PinCodeInputScreen(
+                      phoneNumber: phoneNumber,
+                    )));
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -95,12 +122,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                       ? () {
                           // 인증번호 받기 버튼 클릭 시 행동 추가
                           _focusNode.unfocus();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PinCodeInputScreen(
-                                        phoneNumber: _phoneController.text,
-                                      )));
+                          _sendPhoneNumber();
                         }
                       : null,
                   child: Text('인증번호 받기'),
