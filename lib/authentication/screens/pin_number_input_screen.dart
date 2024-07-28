@@ -7,6 +7,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:speed_dating_front/authentication/controller/phone_number_controller.dart';
 import 'package:speed_dating_front/authentication/controller/pin_code_controller.dart';
+import 'package:speed_dating_front/authentication/screens/gender_input_screen.dart';
 
 class PinCodeInputScreen extends StatefulWidget {
   final String phoneNumber;
@@ -27,7 +28,8 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
 
   void _onCodeChanged(String code) {
     setState(() {
-      _isButtonEnabled = (code.length == 4);
+      pinNumber += code;
+      _isButtonEnabled = (pinNumber.length == 4);
     });
   }
 
@@ -46,7 +48,14 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
     // case 3 : internal server error
 
     if (isSuccess) {
-      _showMessageDialog("Success", "정상적으로 수행되었습니다.");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GenderInputScreen(
+            phoneNumber: widget.phoneNumber,
+          ),
+        ),
+      );
     } else {
       _showMessageDialog("Failure", "코드를 다시 요청해주세요.");
     }
@@ -114,51 +123,16 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
                     enabledBorderColor: Color(0xFFFCE4EC),
                     showFieldAsBox: true,
                     onCodeChanged: _onCodeChanged,
-                    // onSubmit: (String verificationCode) async {
-                    //   print(verificationCode);
-                    //   final url = Uri.parse(
-                    //       'http://localhost:8080/api/v1/auth/sms-verification/verify');
-                    //   final headers = {'Content-Type': 'application/json'};
-                    //   final body =
-                    //       '{"phoneNumber": "${widget.phoneNumber}", "verifyCode": "${verificationCode}"}';
-
-                    //   print(body);
-                    //   try {
-                    //     final response =
-                    //         await http.post(url, body: body, headers: headers);
-                    //     print(response.body);
-
-                    //     if (response.statusCode == HttpStatus.created) {
-                    //       showDialog(
-                    //           context: context,
-                    //           builder: (context) {
-                    //             return AlertDialog(
-                    //               title: Text("success"),
-                    //               content: Text('정상적으로 수행되었습니다.'),
-                    //             );
-                    //           });
-                    //     } else {
-                    //       showDialog(
-                    //           context: context,
-                    //           builder: (context) {
-                    //             return AlertDialog(
-                    //               title: Text("failure"),
-                    //               content: Text('코드를 다시요청해주세요.'),
-                    //             );
-                    //           });
-                    //     }
-                    //   } catch (e) {
-                    //     print(e);
-                    //   }
-                    // }, // end onSubmit
                     onSubmit: (String verificationCode) {
                       _onSubmit(verificationCode);
                     },
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => _phoneNumberController
-                        .sendPhoneNumber(widget.phoneNumber),
+                    onPressed: () {
+                      _phoneNumberController
+                          .sendPhoneNumber(widget.phoneNumber);
+                    },
                     child: Text("인증번호 다시 요청하기"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFFCE4EC), // 배경색 설정
@@ -171,17 +145,6 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
                 ],
               ),
               SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isButtonEnabled
-                      ? () {
-                          _focusNode.unfocus();
-                        }
-                      : null,
-                  child: Text('확인'),
-                ),
-              ),
             ],
           ),
         ),
