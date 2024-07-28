@@ -1,8 +1,13 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:http/http.dart' as http;
+import 'package:speed_dating_front/authentication/controller/phone_number_controller.dart';
+import 'package:speed_dating_front/authentication/controller/pin_code_controller.dart';
+import 'package:speed_dating_front/authentication/screens/gender_input_screen.dart';
 
 class PinCodeInputScreen extends StatefulWidget {
   final String phoneNumber;
@@ -14,8 +19,65 @@ class PinCodeInputScreen extends StatefulWidget {
 }
 
 class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
+  final PinCodeController _controller = PinCodeController();
+  final PhoneNumberController _phoneNumberController = PhoneNumberController();
+
   String pinNumber = "";
+  final FocusNode _focusNode = FocusNode();
   bool _isButtonEnabled = false;
+
+  void _onCodeChanged(String code) {
+    setState(() {
+      pinNumber += code;
+      _isButtonEnabled = (pinNumber.length == 4);
+    });
+  }
+
+  void _onSubmit(String verificationCode) async {
+    final isSuccess =
+        await _controller.verifyPinCode(widget.phoneNumber, verificationCode);
+    print(isSuccess);
+    // todo : code 에 따라 다른 분기 타도록 수정
+    // success
+    // case 1 : 이미 유저가 존재하는 경우 -> 토스트 메시지 + 화면 콜스택 모두 닫기 => 메인페이지 진입
+    // case 2 : 유저가 존재하지 않는 경우 -> 회원가입 플로우
+
+    // failure
+    // case 1 : 인증코드가 맞지 않는 경우
+    // case 2: 요청시간이 지난경우
+    // case 3 : internal server error
+
+    if (isSuccess) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GenderInputScreen(
+            phoneNumber: widget.phoneNumber,
+          ),
+        ),
+      );
+    } else {
+      _showMessageDialog("Failure", "코드를 다시 요청해주세요.");
+    }
+  }
+
+  void _showMessageDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -60,29 +122,17 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
                     focusedBorderColor: Color(0xFFC2185B),
                     enabledBorderColor: Color(0xFFFCE4EC),
                     showFieldAsBox: true,
-                    onCodeChanged: (String code) {
-                      pinNumber += code;
-                      if (pinNumber.length >= 4) {
-                        setState(() {
-                          _isButtonEnabled = true;
-                        });
-                      }
-                    },
+                    onCodeChanged: _onCodeChanged,
                     onSubmit: (String verificationCode) {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text("Verification Code"),
-                              content:
-                                  Text('Code entered is $verificationCode'),
-                            );
-                          });
-                    }, // end onSubmit
+                      _onSubmit(verificationCode);
+                    },
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _phoneNumberController
+                          .sendPhoneNumber(widget.phoneNumber);
+                    },
                     child: Text("인증번호 다시 요청하기"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFFCE4EC), // 배경색 설정
@@ -95,17 +145,6 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
                 ],
               ),
               SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isButtonEnabled
-                      ? () {
-                          // 핀코드 확인 버튼 클릭 시 행동 추가
-                        }
-                      : null,
-                  child: Text('확인'),
-                ),
-              ),
             ],
           ),
         ),

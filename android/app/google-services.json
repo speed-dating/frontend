@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588215178976",
+    "project_id": "speed-dating-63bd3",
+    "storage_bucket": "speed-dating-63bd3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588215178976:android:b4552bfd88ac40d871a285",
+        "android_client_info": {
+          "package_name": "com.example.speed_dating_front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQUZGpv_FDl5FWrfIlBMnhBwLj1kxZHPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

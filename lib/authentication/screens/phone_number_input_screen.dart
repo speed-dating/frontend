@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:speed_dating_front/authentication/controller/phone_number_controller.dart';
 import 'package:speed_dating_front/authentication/screens/pin_number_input_screen.dart';
+import 'package:http/http.dart' as http;
 
 class PhoneNumberInputScreen extends StatefulWidget {
   const PhoneNumberInputScreen({super.key});
@@ -10,6 +14,7 @@ class PhoneNumberInputScreen extends StatefulWidget {
 
 class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
   final _phoneController = TextEditingController();
+  final _controller = PhoneNumberController();
   bool _isButtonEnabled = false;
   final FocusNode _focusNode = FocusNode();
 
@@ -29,9 +34,37 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
   void _isValidPhoneNumber() {
     final phoneNumber = _phoneController.text;
     setState(() {
-      _isButtonEnabled =
-          phoneNumber.startsWith("010") && (phoneNumber.length == 11);
+      _isButtonEnabled = _controller.isValidPhoneNumber(phoneNumber);
     });
+  }
+
+  void _onSendCodePressed() {
+    _focusNode.unfocus();
+    _controller.sendPhoneNumber(_phoneController.text).then(
+          (isSuccess) => {
+            if (isSuccess)
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PinCodeInputScreen(
+                      phoneNumber: _phoneController.text,
+                    ),
+                  ),
+                )
+              }
+            else
+              {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('인증번호 전송에 실패했습니다. 다시 시도해주세요.'),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 1),
+                  ),
+                )
+              }
+          },
+        );
   }
 
   @override
@@ -91,18 +124,7 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
               Container(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isButtonEnabled
-                      ? () {
-                          // 인증번호 받기 버튼 클릭 시 행동 추가
-                          _focusNode.unfocus();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PinCodeInputScreen(
-                                        phoneNumber: _phoneController.text,
-                                      )));
-                        }
-                      : null,
+                  onPressed: _isButtonEnabled ? _onSendCodePressed : null,
                   child: Text('인증번호 받기'),
                 ),
               ),
