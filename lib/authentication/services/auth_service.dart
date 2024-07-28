@@ -13,9 +13,24 @@ class AuthService {
 
     final response = await http.post(url, body: body, headers: headers);
 
-    return HttpResponse(isSuccess: false);
-
     if (response.statusCode == HttpStatus.created) {
+      return HttpResponse(isSuccess: true);
+    } else {
+      return HttpResponse(isSuccess: false);
+    }
+  }
+
+  Future<HttpResponse> verifyPinCode(
+      String phoneNumber, String verificationCode) async {
+    final url =
+        Uri.parse('http://localhost:8080/api/v1/auth/sms-verification/verify');
+    final headers = {'Content-Type': 'application/json'};
+    final body =
+        '{"phoneNumber": "$phoneNumber", "verifyCode": "$verificationCode"}';
+
+    final response = await http.post(url, body: body, headers: headers);
+    print(response.body);
+    if (response.statusCode == 201) {
       return HttpResponse(isSuccess: true);
     } else {
       return HttpResponse(isSuccess: false);
