@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:speed_dating_front/authentication/screens/nickname_input_screen.dart';
 
-enum Gender { MALE, FEMALE }
+enum Gender {
+  @JsonValue('MALE')
+  MALE,
+
+  @JsonValue("FEMALE")
+  FEMALE
+}
 
 class GenderInputScreen extends StatefulWidget {
   final String phoneNumber;
