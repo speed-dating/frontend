@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:http/http.dart' as http;
-import 'package:speed_dating_front/authentication/controller/phone_number_controller.dart';
-import 'package:speed_dating_front/authentication/controller/pin_code_controller.dart';
+import 'package:speed_dating_front/authentication/controller/auth_controller.dart';
 import 'package:speed_dating_front/authentication/screens/gender_input_screen.dart';
 
 class PinCodeInputScreen extends StatefulWidget {
@@ -19,8 +18,7 @@ class PinCodeInputScreen extends StatefulWidget {
 }
 
 class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
-  final PinCodeController _controller = PinCodeController();
-  final PhoneNumberController _phoneNumberController = PhoneNumberController();
+  final AuthController _controller = AuthController();
 
   String pinNumber = "";
   final FocusNode _focusNode = FocusNode();
@@ -130,8 +128,7 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      _phoneNumberController
-                          .sendPhoneNumber(widget.phoneNumber);
+                      _controller.sendPhoneNumber(widget.phoneNumber);
                     },
                     child: Text("인증번호 다시 요청하기"),
                     style: ElevatedButton.styleFrom(

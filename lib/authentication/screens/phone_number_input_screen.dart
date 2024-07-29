@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:speed_dating_front/authentication/controller/phone_number_controller.dart';
+import 'package:speed_dating_front/authentication/controller/auth_controller.dart';
 import 'package:speed_dating_front/authentication/screens/pin_number_input_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +14,7 @@ class PhoneNumberInputScreen extends StatefulWidget {
 
 class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
   final _phoneController = TextEditingController();
-  final _controller = PhoneNumberController();
+  final _controller = AuthController();
   bool _isButtonEnabled = false;
   final FocusNode _focusNode = FocusNode();
 

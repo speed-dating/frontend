@@ -1,111 +1,95 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scroll_wheel_date_picker/scroll_wheel_date_picker.dart';
-import 'package:wheel_picker/wheel_picker.dart';
+import 'package:speed_dating_front/authentication/controller/auth_controller.dart';
+import 'package:speed_dating_front/authentication/model/user.dart';
+import 'package:speed_dating_front/authentication/screens/gender_input_screen.dart';
+import 'package:spinner_date_picker/date_picker/date_picker.dart';
 
 class BirthdateInputScreen extends StatefulWidget {
+  final String phoneNumber;
+  final String nickname;
+  final Gender gender;
+
+  const BirthdateInputScreen(
+      {super.key,
+      required this.phoneNumber,
+      required this.nickname,
+      required this.gender});
+
   @override
   _BirthdateInputScreenState createState() => _BirthdateInputScreenState();
 }
 
 class _BirthdateInputScreenState extends State<BirthdateInputScreen> {
-  final now = DateTime.now();
+  String birthDate = "";
+  AuthController _authController = AuthController();
 
-  late final _yearWheel = WheelPickerController(
-    itemCount: 3000,
-    initialIndex: now.year,
-  );
-
-  late final _hoursWheel = WheelPickerController(
-    itemCount: 12,
-    initialIndex: now.hour % 12,
-  );
-  late final _minutesWheel = WheelPickerController(
-    itemCount: 60,
-    initialIndex: now.minute,
-    mounts: [_hoursWheel],
+  ValueNotifier<DateTime> dateNotifier = ValueNotifier(
+    DateTime(2020, MonthsOfYear.march.number, 12),
   );
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(fontSize: 26.0, height: 1.5);
-    final wheelStyle = WheelPickerStyle(
-      size: 200,
-      itemExtent: textStyle.fontSize! * textStyle.height!, // Text height
-      squeeze: 1.25,
-      diameterRatio: .8,
-      surroundingOpacity: .25,
-      magnification: 1.2,
-    );
-
-    Widget itemBuilder(BuildContext context, int index) {
-      return Text("$index".padLeft(2, '0'), style: textStyle);
-    }
-
-    final timeWheels = <Widget>[
-      for (final wheelController in [_yearWheel, _hoursWheel, _minutesWheel])
-        WheelPicker(
-          builder: itemBuilder,
-          controller: wheelController,
-          looping: wheelController == _minutesWheel,
-          style: wheelStyle,
-          selectedIndexColor: Colors.redAccent,
-        ),
-    ];
-    timeWheels.insert(1, const Text(":", style: textStyle));
-
-    final amPmWheel = WheelPicker(
-      itemCount: 2,
-      builder: (context, index) {
-        return Text(["AM", "PM"][index], style: textStyle);
-      },
-      initialIndex: 1,
-      looping: false,
-      style: wheelStyle.copyWith(
-        shiftAnimationStyle: const WheelShiftAnimationStyle(
-          duration: Duration(seconds: 1),
-          curve: Curves.bounceOut,
+    return Scaffold(
+      // backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(
+          color: Color(0xFFC2185B), // 여기서 색상을 변경
         ),
       ),
-    );
-
-    return SizedBox(
-      width: wheelStyle.size,
-      child: Stack(
-        fit: StackFit.expand,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _centerBar(context),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ...timeWheels,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: amPmWheel,
+          ValueListenableBuilder(
+              valueListenable: dateNotifier,
+              builder: (context, date, _) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("생년월일을 입력해주세요."),
+                      SizedBox(height: 20),
+                      SpinnerDatePicker(
+                          initialDate: date,
+                          dateOptions: const [
+                            DateOptions.d,
+                            DateOptions.m,
+                            DateOptions.y
+                          ],
+                          textStyle: TextStyle(color: Colors.red),
+                          onDateChanged: (date) {
+                            setState(() {
+                              dateNotifier.value = date;
+                              birthDate =
+                                  "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                            });
+                          }),
+                    ],
+                  ),
+                );
+              }),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40, left: 16, right: 16),
+            child: Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  _authController.sendUserCreation(UserModel(
+                      gender: widget.gender,
+                      phoneNumber: widget.phoneNumber,
+                      nickname: widget.nickname,
+                      country: 'KR',
+                      birthDate: birthDate));
+                },
+                child: Text('완료!'),
               ),
-            ],
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    // Don't forget to dispose the controllers at the end.
-    _hoursWheel.dispose();
-    _minutesWheel.dispose();
-    super.dispose();
-  }
-
-  Widget _centerBar(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 38.0,
-        decoration: BoxDecoration(
-          color: const Color(0xFFC3C9FA).withAlpha(26),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
       ),
     );
   }

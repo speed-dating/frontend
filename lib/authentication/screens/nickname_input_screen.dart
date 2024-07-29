@@ -33,12 +33,15 @@ class _NicknameInputScreenState extends State<NicknameInputScreen> {
     if (_nickname.isNotEmpty) {
       // 예시로 스낵바를 표시합니다.
       _focusNode.unfocus();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('닉네임이 제출되었습니다: $_nickname')),
-      );
+
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => BirthdateInputScreen()),
+        MaterialPageRoute(
+            builder: (context) => BirthdateInputScreen(
+                  phoneNumber: widget.phoneNumber,
+                  nickname: _nickname,
+                  gender: widget.gender,
+                )),
       );
     }
   }

@@ -27,41 +27,40 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   body: Center(
-    //     child: Padding(
-    //       padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.end,
-    //         children: [
-    //           Container(
-    //             width: double.infinity,
-    //             child: ElevatedButton(
-    //               onPressed: () {
-    //                 Navigator.push(
-    //                   context,
-    //                   MaterialPageRoute(
-    //                       builder: (context) => PhoneNumberInputScreen()),
-    //                 );
-    //               },
-    //               child: Text('처음 왔어요'),
-    //             ),
-    //           ),
-    //           TextButton(
-    //             onPressed: () {
-    //               Navigator.push(
-    //                 context,
-    //                 MaterialPageRoute(
-    //                     builder: (context) => PhoneNumberInputScreen()),
-    //               );
-    //             },
-    //             child: Text('이미 계정이 있어요'),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
-    return BirthdateInputScreen();
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PhoneNumberInputScreen()),
+                    );
+                  },
+                  child: Text('처음 왔어요'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PhoneNumberInputScreen()),
+                  );
+                },
+                child: Text('이미 계정이 있어요'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
