@@ -6,11 +6,11 @@ part 'user.g.dart';
 @JsonSerializable()
 class UserModel {
   final int? id;
-  final Gender gender;
-  final String phoneNumber;
-  final String nickname;
-  final String country;
-  final String birthDate;
+  final Gender? gender;
+  final String? phoneNumber;
+  final String? nickname;
+  final String? country;
+  final String? birthDate;
 
   UserModel({
     this.id,
