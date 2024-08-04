@@ -46,6 +46,7 @@ class AuthService {
 
     final response = await http.post(url, body: body, headers: headers);
     print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 201) {
       return HttpResponse(isSuccess: true);
     } else {

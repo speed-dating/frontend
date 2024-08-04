@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:speed_dating_front/authentication/controller/auth_controller.dart';
 import 'package:speed_dating_front/authentication/model/user.dart';
 import 'package:speed_dating_front/authentication/screens/gender_input_screen.dart';
+import 'package:speed_dating_front/home/screens/home_screen.dart';
 import 'package:spinner_date_picker/date_picker/date_picker.dart';
 
 class BirthdateInputScreen extends StatefulWidget {
@@ -77,13 +78,26 @@ class _BirthdateInputScreenState extends State<BirthdateInputScreen> {
             child: Container(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  _authController.sendUserCreation(UserModel(
-                      gender: widget.gender,
-                      phoneNumber: widget.phoneNumber,
-                      nickname: widget.nickname,
-                      country: 'KR',
-                      birthDate: birthDate));
+                onPressed: () async {
+                  final result =
+                      await _authController.sendUserCreation(UserModel(
+                    gender: widget.gender,
+                    phoneNumber: widget.phoneNumber,
+                    nickname: widget.nickname,
+                    country: 'KR',
+                    birthDate: birthDate,
+                    profileImage: "default profile url",
+                  ));
+
+                  if (result) {
+                    print("heree");
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage()), // 이동할 화면
+                      (Route<dynamic> route) => false, // 모든 기존 화면을 제거
+                    );
+                  }
                 },
                 child: Text('완료!'),
               ),
