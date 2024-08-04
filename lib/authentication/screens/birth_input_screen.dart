@@ -79,13 +79,15 @@ class _BirthdateInputScreenState extends State<BirthdateInputScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  final result = await _authController.sendUserCreation(
-                      UserModel(
-                          gender: widget.gender,
-                          phoneNumber: widget.phoneNumber,
-                          nickname: widget.nickname,
-                          country: 'KR',
-                          birthDate: birthDate));
+                  final result =
+                      await _authController.sendUserCreation(UserModel(
+                    gender: widget.gender,
+                    phoneNumber: widget.phoneNumber,
+                    nickname: widget.nickname,
+                    country: 'KR',
+                    birthDate: birthDate,
+                    profileImage: "default profile url",
+                  ));
 
                   if (result) {
                     print("heree");

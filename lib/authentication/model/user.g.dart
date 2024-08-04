@@ -13,6 +13,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       nickname: json['nickname'] as String?,
       country: json['country'] as String?,
       birthDate: json['birthDate'] as String?,
+      profileImage: json['profileImage'] as String?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -22,6 +23,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'nickname': instance.nickname,
       'country': instance.country,
       'birthDate': instance.birthDate,
+      'profileImage': instance.profileImage,
     };
 
 const _$GenderEnumMap = {

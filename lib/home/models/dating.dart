@@ -9,6 +9,7 @@ class DatingModel {
   final String title;
   final String description;
   final String imageUrl;
+  final String startDate;
   final UserModel owner;
   final List<UserModel> participants;
 
@@ -17,6 +18,7 @@ class DatingModel {
     required this.title,
     required this.description,
     required this.imageUrl,
+    required this.startDate,
     required this.owner,
     required this.participants,
   });

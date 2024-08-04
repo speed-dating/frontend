@@ -11,6 +11,7 @@ class UserModel {
   final String? nickname;
   final String? country;
   final String? birthDate;
+  final String? profileImage; // 추가된 필드
 
   UserModel({
     this.id,
@@ -19,6 +20,7 @@ class UserModel {
     required this.nickname,
     required this.country,
     required this.birthDate,
+    required this.profileImage, // 생성자에 추가
   });
 
   // JSON 데이터를 UserModel 객체로 변환

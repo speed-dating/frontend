@@ -1,10 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speed_dating_front/home/controller/dating_controller.dart';
 import 'package:speed_dating_front/home/models/dating.dart';
+import 'package:speed_dating_front/home/widgets/count_down_timer.dart';
+import 'package:speed_dating_front/home/widgets/dating_card.dart';
 
-class HomePageContent extends StatelessWidget {
+class HomePageContent extends StatefulWidget {
+  @override
+  State<HomePageContent> createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -25,17 +34,17 @@ class HomePageContentScreen extends StatelessWidget {
               children: [
                 _buildSection(
                   context,
-                  title: 'some title1',
+                  title: '내가 참여한 스게팅',
                   items: datingController.datings,
                 ),
                 _buildSection(
                   context,
-                  title: 'some title 2',
+                  title: '앞으로 다가오는 스개팅',
                   items: datingController.datings,
                 ),
                 _buildSection(
                   context,
-                  title: 'some title 3',
+                  title: '[닉네임]님에게 추천할 스게팅',
                   items: datingController.datings,
                 ),
               ],
@@ -45,8 +54,8 @@ class HomePageContentScreen extends StatelessWidget {
 
   Widget _buildSection(BuildContext context,
       {required String title, required List<DatingModel> items}) {
-    return Card(
-      margin: EdgeInsets.all(10),
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -57,22 +66,21 @@ class HomePageContentScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return Container(
-                  width: 150,
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  color: Colors.grey[300],
-                  child: Center(
-                    child: Text(item.title),
-                  ),
-                );
-              },
+          Card(
+            margin: EdgeInsets.all(10),
+            child: SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  print(item.toJson());
+                  return DatingCard(
+                    item: item,
+                  );
+                },
+              ),
             ),
           ),
         ],

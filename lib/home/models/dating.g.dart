@@ -11,6 +11,7 @@ DatingModel _$DatingModelFromJson(Map<String, dynamic> json) => DatingModel(
       title: json['title'] as String,
       description: json['description'] as String,
       imageUrl: json['imageUrl'] as String,
+      startDate: json['startDate'] as String,
       owner: UserModel.fromJson(json['owner'] as Map<String, dynamic>),
       participants: (json['participants'] as List<dynamic>)
           .map((e) => UserModel.fromJson(e as Map<String, dynamic>))
@@ -23,6 +24,7 @@ Map<String, dynamic> _$DatingModelToJson(DatingModel instance) =>
       'title': instance.title,
       'description': instance.description,
       'imageUrl': instance.imageUrl,
+      'startDate': instance.startDate,
       'owner': instance.owner,
       'participants': instance.participants,
     };
