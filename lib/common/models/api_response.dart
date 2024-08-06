@@ -5,7 +5,7 @@ part 'api_response.g.dart';
 @JsonSerializable(genericArgumentFactories: true)
 class ApiResponse<T> {
   final String resultCode;
-  final List<T> data;
+  final T data;
   final String message;
 
   ApiResponse({
