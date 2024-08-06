@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speed_dating_front/home/screens/home_page_content_screen.dart';
+import 'package:speed_dating_front/home/screens/profile_page_screen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,9 +15,7 @@ class _HomePageState extends State<HomePage> {
     Container(
       child: Center(child: Text('chat Screen')),
     ),
-    Container(
-      child: Center(child: Text('Profile Screen')), // 프로필 화면 내용
-    ),
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {

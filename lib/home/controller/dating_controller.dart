@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speed_dating_front/home/models/dating.dart';
+import 'package:speed_dating_front/home/models/profile_response_model.dart';
 import 'package:speed_dating_front/home/service/dating_service.dart';
 
 class DatingController with ChangeNotifier {
@@ -25,6 +26,32 @@ class DatingController with ChangeNotifier {
       // todo : handle error
     } finally {
       _isLoading = false;
+      notifyListeners();
+    }
+  }
+}
+
+class ProfileController with ChangeNotifier {
+  bool isLoading = false;
+  String? errorMessage = null;
+  final DatingService service;
+  ProfileResponseModel? profile;
+
+  ProfileController({required this.service});
+
+  Future<void> fetchMyProfile() async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      print("here");
+      profile = await this.service.fetchMyProfile();
+      print(profile);
+      errorMessage = null;
+    } catch (e) {
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
       notifyListeners();
     }
   }
