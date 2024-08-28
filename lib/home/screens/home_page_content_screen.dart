@@ -34,7 +34,7 @@ class HomePageContentScreen extends StatelessWidget {
               children: [
                 _buildSection(
                   context,
-                  title: '내가 참여한 스게팅',
+                  title: '내가 참여한 스게팅#######',
                   items: datingController.datings,
                 ),
                 _buildSection(

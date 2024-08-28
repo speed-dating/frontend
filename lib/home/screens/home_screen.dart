@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:speed_dating_front/chat/screens/chat_screen.dart';
+import 'package:speed_dating_front/home/screens/chat_content_screen.dart';
 import 'package:speed_dating_front/home/screens/home_page_content_screen.dart';
 import 'package:speed_dating_front/home/screens/profile_page_screen.dart';
 
@@ -12,9 +14,7 @@ class _HomePageState extends State<HomePage> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomePageContent(),
-    Container(
-      child: Center(child: Text('chat Screen')),
-    ),
+    ChatPageScreen(),
     ProfilePage(),
   ];
 
@@ -28,7 +28,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bottom Navigation Example'),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              _selectedIndex == 0
+                  ? '스개팅'
+                  : _selectedIndex == 1
+                      ? '채팅'
+                      : '프로필',
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          if (_selectedIndex == 0)
+            IconButton(
+              icon: Icon(Icons.notifications),
+              onPressed: () {
+                // 알림 버튼 동작
+              },
+            ),
+          if (_selectedIndex == 1 || _selectedIndex == 2)
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                // 설정 버튼 동작
+              },
+            ),
+        ],
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
