@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:speed_dating_front/common/provider/token_provider.dart';
 
 import 'package:speed_dating_front/home/controller/dating_controller.dart';
 import 'package:speed_dating_front/home/models/dating.dart';
+import 'package:speed_dating_front/home/service/dating_service.dart';
 import 'package:speed_dating_front/home/widgets/count_down_timer.dart';
 import 'package:speed_dating_front/home/widgets/dating_card.dart';
 
@@ -16,8 +18,12 @@ class HomePageContent extends StatefulWidget {
 class _HomePageContentState extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
+    final tokenProvider = Provider.of<TokenProvider>(context);
+
     return ChangeNotifierProvider(
-      create: (context) => DatingController()..fetchDatings(0, 10),
+      create: (context) =>
+          DatingController(service: DatingService(tokenProvider))
+            ..fetchDatings(0, 10),
       child: HomePageContentScreen(),
     );
   }

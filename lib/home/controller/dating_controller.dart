@@ -4,9 +4,11 @@ import 'package:speed_dating_front/home/models/profile_response_model.dart';
 import 'package:speed_dating_front/home/service/dating_service.dart';
 
 class DatingController with ChangeNotifier {
-  DatingService _service = DatingService();
+  final DatingService service;
   List<DatingModel> _datings = [];
   bool _isLoading = false;
+
+  DatingController({required this.service});
 
   List<DatingModel> get datings => _datings;
   bool get isLoading => _isLoading;
@@ -19,9 +21,7 @@ class DatingController with ChangeNotifier {
     notifyListeners();
 
     try {
-      print("here");
-      _datings = await _service.fetchDatings(lastId, limit);
-      print('datings : ${datings}');
+      _datings = await service.fetchDatings(lastId, limit);
     } catch (e) {
       // todo : handle error
     } finally {
@@ -44,9 +44,7 @@ class ProfileController with ChangeNotifier {
     notifyListeners();
 
     try {
-      print("here");
       profile = await this.service.fetchMyProfile();
-      print(profile);
       errorMessage = null;
     } catch (e) {
       errorMessage = e.toString();
