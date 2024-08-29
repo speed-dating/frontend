@@ -7,6 +7,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:speed_dating_front/authentication/controller/auth_controller.dart';
 import 'package:speed_dating_front/authentication/screens/gender_input_screen.dart';
+import 'package:speed_dating_front/home/screens/home_screen.dart';
 
 class PinCodeInputScreen extends StatefulWidget {
   final String phoneNumber;
@@ -32,9 +33,9 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
   }
 
   void _onSubmit(String verificationCode) async {
-    final isSuccess =
+    final userVerificationResult =
         await _controller.verifyPinCode(widget.phoneNumber, verificationCode);
-    print(isSuccess);
+
     // todo : code 에 따라 다른 분기 타도록 수정
     // success
     // case 1 : 이미 유저가 존재하는 경우 -> 토스트 메시지 + 화면 콜스택 모두 닫기 => 메인페이지 진입
@@ -45,15 +46,25 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
     // case 2: 요청시간이 지난경우
     // case 3 : internal server error
 
-    if (isSuccess) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => GenderInputScreen(
-            phoneNumber: widget.phoneNumber,
+    if (userVerificationResult != null) {
+      if (userVerificationResult.token != null &&
+          userVerificationResult.user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
           ),
-        ),
-      );
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GenderInputScreen(
+              phoneNumber: widget.phoneNumber,
+            ),
+          ),
+        );
+      }
     } else {
       _showMessageDialog("Failure", "코드를 다시 요청해주세요.");
     }

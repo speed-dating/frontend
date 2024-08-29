@@ -2,15 +2,19 @@ import 'package:banner_carousel/banner_carousel.dart';
 import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:speed_dating_front/common/provider/token_provider.dart';
 import 'package:speed_dating_front/home/controller/dating_controller.dart';
 import 'package:speed_dating_front/home/service/dating_service.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final tokenProvider = Provider.of<TokenProvider>(context);
+
     return ChangeNotifierProvider(
       create: (context) =>
-          ProfileController(service: DatingService())..fetchMyProfile(),
+          ProfileController(service: DatingService(tokenProvider))
+            ..fetchMyProfile(),
       child: ProfilePageContent(),
     );
   }
