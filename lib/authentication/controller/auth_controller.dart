@@ -1,4 +1,5 @@
 import 'package:speed_dating_front/authentication/model/user.dart';
+import 'package:speed_dating_front/authentication/model/user_verification.dart';
 import 'package:speed_dating_front/authentication/services/auth_service.dart';
 
 class AuthController {
@@ -30,15 +31,15 @@ class AuthController {
     }
   }
 
-  Future<bool> verifyPinCode(
+  Future<UserVerificationResponse?> verifyPinCode(
       String phoneNumber, String verificationCode) async {
     try {
       final response =
           await _authService.verifyPinCode(phoneNumber, verificationCode);
-      return response.isSuccess;
+
+      return response.data!;
     } catch (e) {
-      print(e);
-      return false;
+      return null;
     }
   }
 }
