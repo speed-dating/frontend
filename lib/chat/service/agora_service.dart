@@ -1,9 +1,16 @@
 import 'dart:convert';
 
 import 'package:agora_chat_sdk/agora_chat_sdk.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class AgoraService {
+  Function(List<ChatMessage>)? onMessagesReceivedCallback;
+
+  void setOnMessagesReceivedCallback(Function(List<ChatMessage>) callback) {
+    onMessagesReceivedCallback = callback;
+  }
+
   Future<void> signIn(String userId, String? token) async {
     token ??= await fetchAgoraUserToken();
 
@@ -62,5 +69,29 @@ class AgoraService {
       return null;
     }
     return null;
+  }
+
+  Future<void> initAgoraSDK() async {
+    String appKey = dotenv.env['APP_KEY'] ?? '';
+    ChatOptions options = ChatOptions(
+      appKey: appKey,
+      autoLogin: false,
+    );
+    await ChatClient.getInstance.init(options);
+    await ChatClient.getInstance.startCallback();
+    _addAgoraChatListeners();
+  }
+
+  void _addAgoraChatListeners() {
+    ChatClient.getInstance.chatManager.addEventHandler(
+      'MESSAGE_RECEIVED_HANDLER',
+      ChatEventHandler(
+        onMessagesReceived: (messages) {
+          if (onMessagesReceivedCallback != null) {
+            onMessagesReceivedCallback!(messages);
+          }
+        },
+      ),
+    );
   }
 }
