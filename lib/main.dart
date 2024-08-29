@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:speed_dating_front/authentication/screens/phone_number_input_screen.dart';
 import 'package:speed_dating_front/chat/service/agora_service.dart';
+import 'package:speed_dating_front/common/provider/token_provider.dart';
 
 // Global key to access the scaffold messenger
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -16,6 +17,7 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (_) => TokenProvider()),
       Provider<AgoraService>(
         create: (_) => AgoraService(),
       ),

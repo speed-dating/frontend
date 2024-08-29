@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:speed_dating_front/authentication/model/user.dart';
 import 'package:speed_dating_front/authentication/model/user_verification.dart';
 import 'package:speed_dating_front/authentication/services/auth_service.dart';

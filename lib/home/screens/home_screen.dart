@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:speed_dating_front/authentication/services/token_provider.dart';
 import 'package:speed_dating_front/chat/screens/chat_screen.dart';
 import 'package:speed_dating_front/home/screens/chat_content_screen.dart';
 import 'package:speed_dating_front/home/screens/home_page_content_screen.dart';
@@ -26,6 +28,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Align(
@@ -34,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               _selectedIndex == 0
-                  ? '스개팅'
+                  ? '${authProvider.user?.nickname}! 님 어서오세요! '
                   : _selectedIndex == 1
                       ? '채팅'
                       : '프로필',
