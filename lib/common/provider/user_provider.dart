@@ -6,7 +6,7 @@ class UserProvider with ChangeNotifier {
 
   UserModel? get user => _user;
 
-  void setUser(UserModel user) {
+  void setUser(UserModel? user) {
     _user = user;
     notifyListeners(); // UI 업데이트를 위해 호출
   }

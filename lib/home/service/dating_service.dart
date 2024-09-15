@@ -48,7 +48,6 @@ class DatingService {
     final response = await _httpClient.get(
       Uri.parse('$baseUrl/user/profile/me'),
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       try {
         Map<String, dynamic> jsonResponse =

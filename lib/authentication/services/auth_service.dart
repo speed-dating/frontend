@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:speed_dating_front/authentication/model/user.dart';
 import 'package:speed_dating_front/authentication/model/user_verification.dart';
 import 'package:speed_dating_front/common/models/api_response.dart';
+import 'package:speed_dating_front/common/provider/token_provider.dart';
+import 'package:speed_dating_front/common/provider/user_provider.dart';
 
 class AuthService {
   Future<HttpResponse> requestSmsVerification(
@@ -16,7 +18,7 @@ class AuthService {
         '{"phoneNumber": "$phoneNumber", "countryCode": "$countryCode"}';
 
     final response = await http.post(url, body: body, headers: headers);
-
+    print(response.statusCode);
     if (response.statusCode == HttpStatus.created) {
       return HttpResponse<void>(null, isSuccess: true);
     } else {
@@ -41,6 +43,8 @@ class AuthService {
         (jsonData) =>
             UserVerificationResponse.fromJson(jsonData as Map<String, dynamic>),
       );
+      TokenProvider().saveToken(apiResponse.data?.token?.accessToken ?? '');
+      UserProvider().setUser(apiResponse.data?.user);
 
       return HttpResponse<UserVerificationResponse>(
         apiResponse.data,
