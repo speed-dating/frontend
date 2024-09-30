@@ -48,6 +48,10 @@ dependencies:
   agora_chat_uikit: ^1.0.0
   flutter_dotenv: ^5.1.0
   flutter_secure_storage: ^9.2.2
+  speed_dial_fab: ^2.3.0
+  modal_bottom_sheet: ^3.0.0
+  uuid: ^4.5.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

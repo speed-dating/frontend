@@ -5,8 +5,14 @@ import 'package:speed_dating_front/common/constant.dart';
 class TokenProvider with ChangeNotifier {
   String? _token;
   final _storage = FlutterSecureStorage();
+  bool _isLoading = false;
 
   String? get token => _token;
+  bool get isLoading => _isLoading;
+
+  TokenProvider() {
+    loadToken();
+  }
 
   Future<String?> getToken() async {
     final token = await _storage.read(key: TOKEN_KEY);
@@ -15,6 +21,7 @@ class TokenProvider with ChangeNotifier {
 
   Future<void> loadToken() async {
     _token = await _storage.read(key: TOKEN_KEY);
+    _isLoading = false;
     notifyListeners();
   }
 
