@@ -29,6 +29,26 @@ class DatingController with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> createDating(
+    String title,
+    String description,
+    int maleCapacity,
+    int femaleCapacity,
+    DateTime startDate,
+    double price,
+    String? imageUrl,
+  ) async {
+    await service.createDating(
+      title: title,
+      description: description,
+      maleCapacity: maleCapacity,
+      femaleCapacity: femaleCapacity,
+      startDate: startDate,
+      price: price,
+      imageUrl: imageUrl,
+    );
+  }
 }
 
 class ProfileController with ChangeNotifier {

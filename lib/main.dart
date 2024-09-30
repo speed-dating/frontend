@@ -9,6 +9,9 @@ import 'package:speed_dating_front/authentication/screens/phone_number_input_scr
 import 'package:speed_dating_front/chat/service/agora_service.dart';
 import 'package:speed_dating_front/common/provider/token_provider.dart';
 import 'package:speed_dating_front/common/provider/user_provider.dart';
+import 'package:speed_dating_front/dating/controller/dating_controller.dart';
+import 'package:speed_dating_front/dating/service/dating_service.dart';
+import 'package:speed_dating_front/home/screens/home_screen.dart';
 
 // Global key to access the scaffold messenger
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -22,6 +25,12 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => UserProvider()),
       Provider<AgoraService>(
         create: (_) => AgoraService(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => DatingController(
+            service: DatingService(
+                tokenProvider:
+                    Provider.of<TokenProvider>(context, listen: false))),
       ),
     ],
     child: MyApp(),
@@ -40,7 +49,16 @@ class MyApp extends StatelessWidget {
       theme: FlexThemeData.light(scheme: FlexScheme.redM3),
       darkTheme: FlexThemeData.dark(scheme: FlexScheme.redM3),
       home: ChatUIKit(
-        child: MainPage(),
+        child:
+            Consumer<TokenProvider>(builder: (context, tokenProvider, child) {
+          if (tokenProvider.isLoading) {
+            return CircularProgressIndicator();
+          } else if (tokenProvider.token != null) {
+            return HomePage();
+          } else {
+            return MainPage();
+          }
+        }),
       ),
     );
   }

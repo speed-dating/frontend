@@ -1,10 +1,5 @@
-import 'dart:ffi';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:http/http.dart' as http;
 import 'package:speed_dating_front/authentication/controller/auth_controller.dart';
 import 'package:speed_dating_front/authentication/screens/gender_input_screen.dart';
 import 'package:speed_dating_front/home/screens/home_screen.dart';
@@ -32,7 +27,7 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
     });
   }
 
-  void _onSubmit(String verificationCode) async {
+  void _onSubmit(String verificationCode, BuildContext context) async {
     final userVerificationResult =
         await _controller.verifyPinCode(widget.phoneNumber, verificationCode);
 
@@ -66,11 +61,11 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
         );
       }
     } else {
-      _showMessageDialog("Failure", "코드를 다시 요청해주세요.");
+      _showMessageDialog("Failure", "코드를 다시 요청해주세요.", context);
     }
   }
 
-  void _showMessageDialog(String title, String message) {
+  void _showMessageDialog(String title, String message, BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -133,7 +128,7 @@ class _PinCodeInputScreenState extends State<PinCodeInputScreen> {
                     showFieldAsBox: true,
                     onCodeChanged: _onCodeChanged,
                     onSubmit: (String verificationCode) {
-                      _onSubmit(verificationCode);
+                      _onSubmit(verificationCode, context);
                     },
                   ),
                   SizedBox(height: 20),
